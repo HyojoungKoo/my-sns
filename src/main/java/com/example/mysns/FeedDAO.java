@@ -9,6 +9,10 @@ import java.util.List;
 public interface FeedDAO {
     void insertFeed(FeedVO feed);
 
+    void insertFeedImg(FeedImgVO feedImg);
+
+    FeedImgVO selectFeedImg(@Param("no") int no);
+
     List<FeedVO> selectAllFeed();
 
     FeedVO selectFeed(@Param("no") int no);

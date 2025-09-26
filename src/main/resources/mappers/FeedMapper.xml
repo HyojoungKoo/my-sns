@@ -10,6 +10,17 @@
         VALUES (#{content}, #{userId}, #{createdAt});
     </insert>
 
+    <insert id="insertFeedImg" parameterType="com.example.mysns.FeedImgVO"
+            useGeneratedKeys="true" keyProperty="no">
+        INSERT INTO feed_img (content, user_id, created_at) VALUES (#{feedNo}, #{image});
+    </insert>
+
+    <select id="selectFeedImg" parameterType="int" resultType="com.example.mysns.FeedImgVO">
+        SELECT * FROM feed_img WHERE no = #{no}
+    </select>
+
+
+
     <select id="selectAllFeed" resultType="com.example.mysns.FeedVO">
         SELECT * FROM feed ORDER BY no DESC
     </select>
