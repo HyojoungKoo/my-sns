@@ -1,22 +1,31 @@
 package com.example.mysns;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class MysnsApplicationTests {
+
+	@Autowired
+	private FeedDAO feedDAO;
 
 	@Test
 	void contextLoads() {
 	}
 
 	FeedVO insertSample() {
-		FEEDVO feed = new FeedVO();
+		FeedVO feed = new FeedVO();
 		feed.setContent("test");
 		feed.setUserId("testUser");
 		feed.setCreatedAt(LocalDateTime.now()
-				.formate(DAteTImeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
 		feedDAO.insertFeed(feed);
 
@@ -24,36 +33,38 @@ class MysnsApplicationTests {
 	}
 
 	@Test
-	void FeedDAOTest() {
-
-		FeedVO feed = inserSAMple(); 	//메서드 호출
-
-		feedDAO.insertFeed(feed);
-
-		system.out.println(feed.getNo());
-		assertNotNull(feed.getNo());
-
-		return feed.getNO();
+	void FeedInsertTest() {
+		FeedVO feed = insertSample();
+		assertNotNull(feed.getNo(), "Insert 후 FeedNo가 Null이면 안됨");
 	}
 
 	@Test
 	void selectAllFeedTest() {
+		FeedInsertTest();
 
-		FeedVO Feed = insertSample();
-		FeedVO Feed2 = feedDAO.selectFeed(feed.getNO());
+		List<FeedVO> feeds = feedDAO.selectAllFeed();
 
-	assertEquals(feed.getNo(),feed2.getNO());
+		assertNotNull(feeds);
+		assertFalse(feeds.isEmpty());
 	}
 
-	void deleteFeedTest(){
+	@Test
+	void selectFeedTest() {
+		FeedVO feed = insertSample();
 
-		FeedVO Feed = insertSample();
+		FeedVO feed2 = feedDAO.selectFeed(feed.getNo());
+		assertEquals(feed.getNo(), feed2.getNo());
+	}
+
+
+	@Test
+	void deleteFeedTest(){
+		FeedVO feed = insertSample();
 
 		feedDAO.deleteFeed(feed.getNo());
 
-		FeedVO Feed2 = FeedDAO.selectFeed(feed.getNo());
-		assertNotNull(feed2, "삭제후 Null이어야 합니다..");
+		FeedVO feed2 = feedDAO.selectFeed(feed.getNo());
+		assertNull(feed2, "삭제 후 NULL이어야 합니다");
 	}
-
 
 }
